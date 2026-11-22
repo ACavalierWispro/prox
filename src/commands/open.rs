@@ -43,6 +43,33 @@ fn basename(cmd: &str) -> &str {
     cmd.rsplit('/').next().unwrap_or(cmd)
 }
 
+/// The editor's short name, also for Flatpak launches such as `flatpak run dev.zed.Zed`.
+fn editor_name(argv: &[String]) -> String {
+    let first = basename(&argv[0]).to_string();
+    if first != "flatpak" {
+        return first;
+    }
+    let app = argv
+        .iter()
+        .skip(1)
+        .find(|a| a.contains('.') && !a.starts_with('-'))
+        .map(|a| a.to_lowercase())
+        .unwrap_or_default();
+    let known = [
+        ("zed", "zed"),
+        ("vscodium", "codium"),
+        ("vscode", "code"),
+        ("visualstudio", "code"),
+        ("sublimetext", "subl"),
+        ("jetbrains", "idea"),
+    ];
+    known
+        .iter()
+        .find(|(k, _)| app.contains(k))
+        .map(|(_, v)| v.to_string())
+        .unwrap_or(first)
+}
+
 /// First usable editor: settings, then $EDITOR, then $VISUAL.
 pub fn editor_argv(settings: &Settings) -> Result<Vec<String>> {
     let candidates = [
@@ -68,7 +95,7 @@ pub fn launch_dir(settings: &Settings, dir: &Path) -> Result<()> {
     let argv = editor_argv(settings)?;
     let mut cmd = Command::new(&argv[0]);
     cmd.args(&argv[1..]).current_dir(dir);
-    if DIR_EDITORS.contains(&basename(&argv[0])) {
+    if DIR_EDITORS.contains(&editor_name(&argv).as_str()) {
         cmd.arg(".");
     }
     cmd.status()
@@ -81,7 +108,7 @@ pub fn launch_file(settings: &Settings, file: &Path) -> Result<()> {
     let argv = editor_argv(settings)?;
     let mut cmd = Command::new(&argv[0]);
     cmd.args(&argv[1..]);
-    if let Some(flag) = wait_flag(basename(&argv[0])) {
+    if let Some(flag) = wait_flag(&editor_name(&argv)) {
         if !argv.iter().any(|a| a == flag) {
             cmd.arg(flag);
         }
@@ -114,4 +141,21 @@ pub fn print_path(name: &str) -> Result<()> {
     let reg = Registry::load()?;
     println!("{}", reg.resolve(name)?.display());
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn v(s: &str) -> Vec<String> {
+        s.split_whitespace().map(str::to_string).collect()
+    }
+
+    #[test]
+    fn detects_flatpak_editors() {
+        assert_eq!(editor_name(&v("flatpak run dev.zed.Zed")), "zed");
+        assert_eq!(editor_name(&v("flatpak run com.visualstudio.code")), "code");
+        assert_eq!(editor_name(&v("/usr/bin/nvim")), "nvim");
+        assert_eq!(editor_name(&v("flatpak run org.gnome.gedit")), "flatpak");
+    }
 }
