@@ -1,0 +1,106 @@
+{
+  "name": "c",
+  "version": "1.0.0",
+  "description": "C projects (gcc) with clangd / VS Code / Zed / Neovim include paths preconfigured",
+  "type": "language",
+  "aliases": [
+    "gcc",
+    "clang"
+  ],
+  "provides": {
+    "languages": [
+      "c"
+    ],
+    "libs": [
+      "m",
+      "pthread",
+      "curl",
+      "sqlite3",
+      "SDL2",
+      "ncurses",
+      "z",
+      "readline"
+    ]
+  },
+  "dependencies": [],
+  "dirs": [
+    "src",
+    "include",
+    "libs/include",
+    "libs/lib"
+  ],
+  "files": [
+    {
+      "src": "templates/main.c",
+      "dest": "src/main.c"
+    },
+    {
+      "src": "templates/gitignore",
+      "dest": ".gitignore",
+      "merge": "append"
+    },
+    {
+      "src": "templates/compile_flags.txt",
+      "dest": "compile_flags.txt",
+      "merge": "append"
+    },
+    {
+      "src": "templates/libs-README.md",
+      "dest": "libs/README.md"
+    },
+    {
+      "src": "templates/vscode-settings.json",
+      "dest": ".vscode/settings.json",
+      "merge": "json"
+    },
+    {
+      "src": "templates/vscode-c_cpp_properties.json",
+      "dest": ".vscode/c_cpp_properties.json",
+      "merge": "json"
+    },
+    {
+      "src": "templates/vscode-extensions.json",
+      "dest": ".vscode/extensions.json",
+      "merge": "json"
+    },
+    {
+      "src": "templates/zed-settings.json",
+      "dest": ".zed/settings.json",
+      "merge": "json"
+    },
+    {
+      "src": "templates/nvim.lua",
+      "dest": ".nvim.lua",
+      "merge": "append"
+    }
+  ],
+  "build": {
+    "requires": [
+      "gcc"
+    ],
+    "problem_matcher": "$gcc",
+    "build_sh": [
+      "mkdir -p build",
+      "gcc -std=c11 -Wall -Wextra -g -Iinclude -Ilibs/include $(find src -name '*.c') -o build/{{name}} -Llibs/lib {{libs_link}}"
+    ],
+    "build_bat": [
+      "if not exist build mkdir build",
+      "gcc -std=c11 -Wall -Wextra -g -Iinclude -Ilibs\\include src\\*.c -o build\\{{name}}.exe -Llibs\\lib {{libs_link}}"
+    ],
+    "run_sh": [
+      "LD_LIBRARY_PATH=\"libs/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\" ./build/{{name}}"
+    ],
+    "run_bat": [
+      "set \"PATH=%CD%\\libs\\lib;%PATH%\"",
+      "build\\{{name}}.exe"
+    ],
+    "clean_sh": [
+      "rm -rf build"
+    ],
+    "clean_bat": [
+      "if exist build rmdir /s /q build"
+    ]
+  },
+  "min_prox_version": "0.1.0",
+  "checksum": "sha256:1ba941fb52c09b1bab4f44dfe73cedc0e454b797bdd8720eeefa16c81d28b2a9"
+}

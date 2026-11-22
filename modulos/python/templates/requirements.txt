@@ -1,0 +1,2 @@
+# Dependencies for {{name}} (installed into .venv by build.sh)
+{{libs_lines}}

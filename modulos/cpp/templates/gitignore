@@ -1,0 +1,7 @@
+# build output
+build/
+*.o
+*.out
+*.exe
+compile_commands.json
+.cache/

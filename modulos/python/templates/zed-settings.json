@@ -1,0 +1,22 @@
+{
+  "languages": {
+    "Python": {
+      "tab_size": 4
+    }
+  },
+  "lsp": {
+    "pyright": {
+      "settings": {
+        "python": {
+          "pythonPath": ".venv/bin/python"
+        },
+        "python.analysis": {
+          "extraPaths": [
+            "src",
+            "libs"
+          ]
+        }
+      }
+    }
+  }
+}

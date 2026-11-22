@@ -1,0 +1,105 @@
+{
+  "name": "web",
+  "version": "1.0.0",
+  "description": "HTML / CSS / JavaScript sites with a copy-to-dist build and jsconfig for editor IntelliSense",
+  "type": "language",
+  "aliases": [
+    "html",
+    "css",
+    "js",
+    "javascript",
+    "frontend"
+  ],
+  "provides": {
+    "languages": [
+      "html",
+      "css",
+      "javascript"
+    ],
+    "libs": []
+  },
+  "dependencies": [],
+  "dirs": [
+    "src/css",
+    "src/js",
+    "libs"
+  ],
+  "files": [
+    {
+      "src": "templates/index.html",
+      "dest": "src/index.html"
+    },
+    {
+      "src": "templates/style.css",
+      "dest": "src/css/style.css"
+    },
+    {
+      "src": "templates/main.js",
+      "dest": "src/js/main.js"
+    },
+    {
+      "src": "templates/jsconfig.json",
+      "dest": "jsconfig.json",
+      "merge": "json"
+    },
+    {
+      "src": "templates/gitignore",
+      "dest": ".gitignore",
+      "merge": "append"
+    },
+    {
+      "src": "templates/libs-README.md",
+      "dest": "libs/README.md"
+    },
+    {
+      "src": "templates/vscode-settings.json",
+      "dest": ".vscode/settings.json",
+      "merge": "json"
+    },
+    {
+      "src": "templates/vscode-extensions.json",
+      "dest": ".vscode/extensions.json",
+      "merge": "json"
+    },
+    {
+      "src": "templates/zed-settings.json",
+      "dest": ".zed/settings.json",
+      "merge": "json"
+    },
+    {
+      "src": "templates/nvim.lua",
+      "dest": ".nvim.lua",
+      "merge": "append"
+    }
+  ],
+  "build": {
+    "build_sh": [
+      "rm -rf dist",
+      "mkdir -p dist",
+      "cp -r src/. dist/",
+      "if [ -d libs ]; then mkdir -p dist/libs && cp -r libs/. dist/libs/; fi"
+    ],
+    "build_bat": [
+      "if exist dist rmdir /s /q dist",
+      "xcopy /E /I /Y /Q src dist >nul",
+      "if exist libs xcopy /E /I /Y /Q libs dist\\libs >nul"
+    ],
+    "run_sh": [
+      "command -v python3 >/dev/null 2>&1 || { echo \"error: python3 is needed to serve the site\" >&2; exit 1; }",
+      "echo \"Serving dist/ at http://localhost:8000 (Ctrl+C to stop)\"",
+      "python3 -m http.server 8000 --directory dist"
+    ],
+    "run_bat": [
+      "echo Serving dist/ at http://localhost:8000 (Ctrl+C to stop)",
+      "python -m http.server 8000 --directory dist"
+    ],
+    "clean_sh": [
+      "rm -rf dist"
+    ],
+    "clean_bat": [
+      "if exist dist rmdir /s /q dist"
+    ]
+  },
+  "min_prox_version": "0.1.0",
+  "checksum": "sha256:26bc90f4b657f8d1ec099d038aa2fec4ca119701e80ab57188bba33d2d5d81b5"
+}

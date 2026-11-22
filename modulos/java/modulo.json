@@ -1,0 +1,113 @@
+{
+  "name": "java",
+  "version": "1.0.0",
+  "description": "Java projects (javac) with a jar-aware classpath for VS Code, Zed and Neovim (jdtls)",
+  "type": "language",
+  "aliases": [
+    "jdk",
+    "openjdk"
+  ],
+  "provides": {
+    "languages": [
+      "java"
+    ],
+    "libs": []
+  },
+  "dependencies": [],
+  "dirs": [
+    "src/main/java",
+    "libs"
+  ],
+  "files": [
+    {
+      "src": "templates/Main.java",
+      "dest": "src/main/java/Main.java"
+    },
+    {
+      "src": "templates/project",
+      "dest": ".project"
+    },
+    {
+      "src": "templates/classpath",
+      "dest": ".classpath"
+    },
+    {
+      "src": "templates/gitignore",
+      "dest": ".gitignore",
+      "merge": "append"
+    },
+    {
+      "src": "templates/libs-README.md",
+      "dest": "libs/README.md"
+    },
+    {
+      "src": "templates/vscode-settings.json",
+      "dest": ".vscode/settings.json",
+      "merge": "json"
+    },
+    {
+      "src": "templates/vscode-extensions.json",
+      "dest": ".vscode/extensions.json",
+      "merge": "json"
+    },
+    {
+      "src": "templates/zed-settings.json",
+      "dest": ".zed/settings.json",
+      "merge": "json"
+    },
+    {
+      "src": "templates/nvim.lua",
+      "dest": ".nvim.lua",
+      "merge": "append"
+    }
+  ],
+  "build": {
+    "requires": [
+      "javac",
+      "java"
+    ],
+    "build_sh": [
+      "mkdir -p build/classes",
+      "{",
+      "  echo '<?xml version=\"1.0\" encoding=\"UTF-8\"?>'",
+      "  echo '<classpath>'",
+      "  echo '  <classpathentry kind=\"src\" path=\"src/main/java\"/>'",
+      "  echo '  <classpathentry kind=\"con\" path=\"org.eclipse.jdt.launching.JRE_CONTAINER\"/>'",
+      "  for j in libs/*.jar; do",
+      "    if [ -e \"$j\" ]; then echo \"  <classpathentry kind=\\\"lib\\\" path=\\\"$j\\\"/>\"; fi",
+      "  done",
+      "  echo '  <classpathentry kind=\"output\" path=\"build/classes\"/>'",
+      "  echo '</classpath>'",
+      "} > .classpath",
+      "javac -d build/classes -cp \"libs/*\" $(find src/main/java -name '*.java')"
+    ],
+    "build_bat": [
+      "if not exist build\\classes mkdir build\\classes",
+      "> .classpath (",
+      "  echo ^<?xml version=\"1.0\" encoding=\"UTF-8\"?^>",
+      "  echo ^<classpath^>",
+      "  echo   ^<classpathentry kind=\"src\" path=\"src/main/java\"/^>",
+      "  echo   ^<classpathentry kind=\"con\" path=\"org.eclipse.jdt.launching.JRE_CONTAINER\"/^>",
+      "  for %%j in (libs\\*.jar) do echo   ^<classpathentry kind=\"lib\" path=\"libs/%%~nxj\"/^>",
+      "  echo   ^<classpathentry kind=\"output\" path=\"build/classes\"/^>",
+      "  echo ^</classpath^>",
+      ")",
+      "dir /s /b src\\main\\java\\*.java > build\\sources.txt",
+      "javac -d build\\classes -cp \"libs\\*\" @build\\sources.txt"
+    ],
+    "run_sh": [
+      "java -cp \"build/classes:libs/*\" Main"
+    ],
+    "run_bat": [
+      "java -cp \"build\\classes;libs\\*\" Main"
+    ],
+    "clean_sh": [
+      "rm -rf build"
+    ],
+    "clean_bat": [
+      "if exist build rmdir /s /q build"
+    ]
+  },
+  "min_prox_version": "0.1.0",
+  "checksum": "sha256:297b2dfddcb445622901d9e2b4db0d9b4a972cafec7d0fdc066a8f0888912292"
+}

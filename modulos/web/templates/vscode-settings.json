@@ -1,0 +1,5 @@
+{
+  "editor.tabSize": 2,
+  "html.format.wrapLineLength": 100,
+  "js/ts.implicitProjectConfig.checkJs": true
+}

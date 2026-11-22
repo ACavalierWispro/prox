@@ -1,0 +1,96 @@
+{
+  "name": "rust",
+  "version": "1.0.0",
+  "description": "Rust projects with Cargo and rust-analyzer (clippy) preconfigured",
+  "type": "language",
+  "aliases": [
+    "rs",
+    "cargo"
+  ],
+  "provides": {
+    "languages": [
+      "rust"
+    ],
+    "libs": [
+      "anyhow",
+      "thiserror",
+      "serde_json",
+      "rand",
+      "regex",
+      "itertools",
+      "chrono",
+      "log",
+      "env_logger",
+      "once_cell"
+    ]
+  },
+  "dependencies": [],
+  "dirs": [
+    "src"
+  ],
+  "files": [
+    {
+      "src": "templates/Cargo.toml",
+      "dest": "Cargo.toml"
+    },
+    {
+      "src": "templates/main.rs",
+      "dest": "src/main.rs"
+    },
+    {
+      "src": "templates/gitignore",
+      "dest": ".gitignore",
+      "merge": "append"
+    },
+    {
+      "src": "templates/libs-README.md",
+      "dest": "libs/README.md"
+    },
+    {
+      "src": "templates/vscode-settings.json",
+      "dest": ".vscode/settings.json",
+      "merge": "json"
+    },
+    {
+      "src": "templates/vscode-extensions.json",
+      "dest": ".vscode/extensions.json",
+      "merge": "json"
+    },
+    {
+      "src": "templates/zed-settings.json",
+      "dest": ".zed/settings.json",
+      "merge": "json"
+    },
+    {
+      "src": "templates/nvim.lua",
+      "dest": ".nvim.lua",
+      "merge": "append"
+    }
+  ],
+  "build": {
+    "requires": [
+      "cargo"
+    ],
+    "problem_matcher": "$rustc",
+    "build_sh": [
+      "cargo build --release"
+    ],
+    "build_bat": [
+      "cargo build --release"
+    ],
+    "run_sh": [
+      "cargo run --release"
+    ],
+    "run_bat": [
+      "cargo run --release"
+    ],
+    "clean_sh": [
+      "cargo clean"
+    ],
+    "clean_bat": [
+      "cargo clean"
+    ]
+  },
+  "min_prox_version": "0.1.0",
+  "checksum": "sha256:9b5400cdf2b69db29f52b8130e4002b299aecbd381a68a5d1138f5c8e0867bdd"
+}

@@ -1,0 +1,11 @@
+{
+  "editor.tabSize": 4,
+  "C_Cpp.default.includePath": [
+    "${workspaceFolder}/include",
+    "${workspaceFolder}/libs/include"
+  ],
+  "C_Cpp.default.cppStandard": "c++17",
+  "clangd.arguments": [
+    "--background-index"
+  ]
+}

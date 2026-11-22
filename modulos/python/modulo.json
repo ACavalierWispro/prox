@@ -1,0 +1,110 @@
+{
+  "name": "python",
+  "version": "1.0.0",
+  "description": "Python 3 projects with a virtualenv, pyright and VS Code / Zed / Neovim interpreter paths preconfigured",
+  "type": "language",
+  "aliases": [
+    "py",
+    "python3"
+  ],
+  "provides": {
+    "languages": [
+      "python"
+    ],
+    "libs": [
+      "requests",
+      "numpy",
+      "pandas",
+      "flask",
+      "pytest",
+      "matplotlib",
+      "rich",
+      "pydantic",
+      "pillow"
+    ]
+  },
+  "dependencies": [],
+  "dirs": [
+    "src",
+    "libs"
+  ],
+  "files": [
+    {
+      "src": "templates/main.py",
+      "dest": "src/main.py"
+    },
+    {
+      "src": "templates/requirements.txt",
+      "dest": "requirements.txt"
+    },
+    {
+      "src": "templates/gitignore",
+      "dest": ".gitignore",
+      "merge": "append"
+    },
+    {
+      "src": "templates/pyrightconfig.json",
+      "dest": "pyrightconfig.json",
+      "merge": "json"
+    },
+    {
+      "src": "templates/libs-README.md",
+      "dest": "libs/README.md"
+    },
+    {
+      "src": "templates/vscode-settings.json",
+      "dest": ".vscode/settings.json",
+      "merge": "json"
+    },
+    {
+      "src": "templates/vscode-extensions.json",
+      "dest": ".vscode/extensions.json",
+      "merge": "json"
+    },
+    {
+      "src": "templates/zed-settings.json",
+      "dest": ".zed/settings.json",
+      "merge": "json"
+    },
+    {
+      "src": "templates/nvim.lua",
+      "dest": ".nvim.lua",
+      "merge": "append"
+    }
+  ],
+  "build": {
+    "requires": [
+      "python3"
+    ],
+    "requires_bat": [
+      "python"
+    ],
+    "build_sh": [
+      "[ -d .venv ] || python3 -m venv .venv",
+      ".venv/bin/python -m pip install -q -r requirements.txt",
+      ".venv/bin/python -m compileall -q src"
+    ],
+    "build_bat": [
+      "if not exist .venv python -m venv .venv",
+      ".venv\\Scripts\\python -m pip install -q -r requirements.txt",
+      ".venv\\Scripts\\python -m compileall -q src"
+    ],
+    "run_sh": [
+      "PYTHONPATH=\"src:libs${PYTHONPATH:+:$PYTHONPATH}\" .venv/bin/python src/main.py"
+    ],
+    "run_bat": [
+      "set \"PYTHONPATH=src;libs\"",
+      ".venv\\Scripts\\python src\\main.py"
+    ],
+    "clean_sh": [
+      "rm -rf .venv build",
+      "find . -name __pycache__ -type d -prune -exec rm -rf {} +"
+    ],
+    "clean_bat": [
+      "if exist .venv rmdir /s /q .venv",
+      "for /d /r %%d in (__pycache__) do @if exist \"%%d\" rmdir /s /q \"%%d\""
+    ]
+  },
+  "min_prox_version": "0.1.0",
+  "checksum": "sha256:8b5ef32fa985c8184cb7ce4772143f1b81ab164d9d7bc55abd9ec0b944f927ac"
+}
